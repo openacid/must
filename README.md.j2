@@ -1,16 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
- 
-
-- [must](#must)
-- [Usage](#usage)
-- [API](#api)
-- [Examples](#examples)
-- [Install](#install)
-- [Customize tags](#customize-tags)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # must
 
 `must` is a "design by contract" implementation in golang,
@@ -29,32 +16,7 @@ To enable expectation check in test environment, use `go build|test -tags debug`
 To disable it for a release, just `go build`.
 
 ```go
-package main
-
-import (
-	"fmt"
-	"math/bits"
-
-	"github.com/openacid/must"
-)
-
-var mustbe = must.Be
-
-func rshift(a, b int) int {
-
-	// "go build" emits a single No-op instruction.
-	// "go build -tags debug" will call the function and to the checking.
-	mustbe.OK(func() {
-		mustbe.NotZero(b)
-		mustbe.True(bits.TrailingZeros(uint(a)) > 2, "a must be multiple of 8")
-	})
-
-	return a >> uint(b)
-}
-
-func main() {
-	fmt.Println(rshift(0xf, 1)) // panic at line 19 with "go run -tags debug"
-}
+{% include 'examples/rshift/composite/main.go' %}
 ```
 
 With the above code:
