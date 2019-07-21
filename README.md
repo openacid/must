@@ -1,16 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
- 
-
-- [must](#must)
-- [Usage](#usage)
-- [API](#api)
-- [Examples](#examples)
-- [Install](#install)
-- [Customize tags](#customize-tags)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # must
 
 `must` is a "design by contract" implementation in golang,
@@ -22,6 +9,18 @@ for addressing silent bug that is caused by unexpected input etc.
 [![GolangCI](https://golangci.com/badges/github.com/openacid/must.svg)](https://golangci.com/r/github.com/openacid/must)
 [![Sourcegraph](https://sourcegraph.com/github.com/openacid/must/-/badge.svg)](https://sourcegraph.com/github.com/openacid/must?badge)
 ![stability-unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+ 
+
+- [Usage](#usage)
+- [API](#api)
+- [Examples](#examples)
+- [Install](#install)
+- [Customize tags](#customize-tags)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Usage
 
@@ -59,61 +58,59 @@ func main() {
 
 With the above code:
 
--   `go run -tags debug` would panic because `a` does not satisfy the input
-    expectation:
+**Enable check** with `go run -tags debug`.
 
-    ```
-    panic:
-            Error Trace:    enabled.go:188
-                                                    main.go:18
-                                                    enabled.go:33
-                                                    main.go:16
-                                                    main.go:25
-                                                    proc.go:200
-                                                    asm_amd64.s:1337
-            Error:          Should be true
-            Messages:       a must be multiple of 8
-    ```
+It would panic because `a` does not satisfy the input
+expectation:
 
-    To disassemble the binary we could see there is checking statement instruction:
+```
+panic:
+        ...
+        Error:          Should be true
+        Messages:       a must be multiple of 8
+```
 
-    ```
-    > go build -tags debug -o bin-debug .
-    > go tool objdump -S bin-debug
-    >
-    TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
-    func rshift(a, b int) int {
-      ...
-            mustbe.OK(func() {
-      0x12481fd             0f57c0                  XORPS X0, X0
-      0x1248200             0f110424                MOVUPS X0, 0(SP)
-      ...
-            f()
-      0x124822d             488b1c24                MOVQ 0(SP), BX
-      ...
-    ```
+To disassemble the binary we could see there is checking statement instruction:
 
--   `go run .` just silently ignores the expectation and print the result:
+```
+> go build -tags debug -o bin-debug .
+> go tool objdump -S bin-debug
+>
+TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
+func rshift(a, b int) int {
+  ...
+        mustbe.OK(func() {
+  0x12481fd             0f57c0                  XORPS X0, X0
+  0x1248200             0f110424                MOVUPS X0, 0(SP)
+  ...
+        f()
+  0x124822d             488b1c24                MOVQ 0(SP), BX
+  ...
+```
 
-    ```
-    7
-    ```
+**Disable check** with `go run .`
 
-    To disassemble the binary we could see there is only a `NOPL` instruction:
+It just silently ignores the expectation and print the result:
 
-    ```
-    > go build -o bin-release .
-    > go tool objdump -S bin-release
+```
+7
+```
 
-    TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
-            mustbe.OK(func() {
-      0x1246030             90                      NOPL
-      0x1246031             488b4c2410              MOVQ 0x10(SP), CX
-            return a >> uint(b)
-      0x1246036             4883f940                CMPQ $0x40, CX
-      ...
-      0x1246050             c3                      RET
-    ```
+To disassemble the binary we could see there is only a `NOPL` instruction:
+
+```
+> go build -o bin-release .
+> go tool objdump -S bin-release
+
+TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
+        mustbe.OK(func() {
+  0x1246030             90                      NOPL
+  0x1246031             488b4c2410              MOVQ 0x10(SP), CX
+        return a >> uint(b)
+  0x1246036             4883f940                CMPQ $0x40, CX
+  ...
+  0x1246050             c3                      RET
+```
 
 
 # API
