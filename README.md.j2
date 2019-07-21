@@ -91,14 +91,56 @@ TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
 
 # API
 
-`must` uses the popular [testify](github.com/stretchr/testify) as underlying
+`must` uses the popular [testify](https://github.com/stretchr/testify) as underlying
 asserting engine, thus there is a corresponding function defined for every
-`testify` assertion function.
-E.g.:
+`testify` assertion function:
 
 ```
-must.Be.True(v bool) --> testify/assert.True(t TestingT, v bool)
+must.Be.OK(f func())
+
+must.Be.Condition(comp assert.Comparison, msgAndArgs ...interface{})
+must.Be.Contains(s, contains interface{}, msgAndArgs ...interface{})
+must.Be.DirExists(path string, msgAndArgs ...interface{})
+must.Be.ElementsMatch(listA, listB interface{}, msgAndArgs ...interface{})
+must.Be.Empty(object interface{}, msgAndArgs ...interface{})
+must.Be.Equal(expected, actual interface{}, msgAndArgs ...interface{})
+must.Be.EqualError(theError error, errString string, msgAndArgs ...interface{})
+must.Be.EqualValues(expected, actual interface{}, msgAndArgs ...interface{})
+must.Be.Error(err error, msgAndArgs ...interface{})
+must.Be.Exactly(expected, actual interface{}, msgAndArgs ...interface{})
+must.Be.Fail(failureMessage string, msgAndArgs ...interface{})
+must.Be.FailNow(failureMessage string, msgAndArgs ...interface{})
+must.Be.False(value bool, msgAndArgs ...interface{})
+must.Be.FileExists(path string, msgAndArgs ...interface{})
+must.Be.Implements(interfaceObject interface{}, object interface{}, msgAndArgs ...interface{})
+must.Be.InDelta(expected, actual interface{}, delta float64, msgAndArgs ...interface{})
+must.Be.InDeltaMapValues(expected, actual interface{}, delta float64, msgAndArgs ...interface{})
+must.Be.InDeltaSlice(expected, actual interface{}, delta float64, msgAndArgs ...interface{})
+must.Be.InEpsilon(expected, actual interface{}, epsilon float64, msgAndArgs ...interface{})
+must.Be.InEpsilonSlice(expected, actual interface{}, epsilon float64, msgAndArgs ...interface{})
+must.Be.IsType(expectedType interface{}, object interface{}, msgAndArgs ...interface{})
+must.Be.JSONEq(expected string, actual string, msgAndArgs ...interface{})
+must.Be.Len(object interface{}, length int, msgAndArgs ...interface{})
+must.Be.Nil(object interface{}, msgAndArgs ...interface{})
+must.Be.NoError(err error, msgAndArgs ...interface{})
+must.Be.NotContains(s, contains interface{}, msgAndArgs ...interface{})
+must.Be.NotEmpty(object interface{}, msgAndArgs ...interface{})
+must.Be.NotEqual(expected, actual interface{}, msgAndArgs ...interface{})
+must.Be.NotNil(object interface{}, msgAndArgs ...interface{})
+must.Be.NotPanics(f assert.PanicTestFunc, msgAndArgs ...interface{})
+must.Be.NotRegexp(rx interface{}, str interface{}, msgAndArgs ...interface{})
+must.Be.NotSubset(list, subset interface{}, msgAndArgs ...interface{})
+must.Be.NotZero(i interface{}, msgAndArgs ...interface{})
+must.Be.Panics(f assert.PanicTestFunc, msgAndArgs ...interface{})
+must.Be.PanicsWithValue(expected interface{}, f assert.PanicTestFunc, msgAndArgs ...interface{})
+must.Be.Regexp(rx interface{}, str interface{}, msgAndArgs ...interface{})
+must.Be.Subset(list, subset interface{}, msgAndArgs ...interface{})
+must.Be.True(value bool, msgAndArgs ...interface{})
+must.Be.WithinDuration(expected, actual time.Time, delta time.Duration, msgAndArgs ...interface{})
+must.Be.Zero(i interface{}, msgAndArgs ...interface{})
 ```
+
+See: [assert-functions](https://godoc.org/github.com/stretchr/testify/assert)
 
 
 # Examples
