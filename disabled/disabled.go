@@ -12,6 +12,9 @@ import (
 type foo struct{}
 
 var (
+	// Be is the container of all checking APIs, such as "must.Be.Equal(a, b)".
+	//
+	// Since 0.1.0
 	Be = &foo{}
 )
 
