@@ -3,6 +3,12 @@
 `must` is a "design by contract" implementation in golang,
 for addressing silent bug that is caused by unexpected input etc.
 
+"Design by contract" requires that some conditions **MUST** be satisfied for the input of a
+function, thus the function does not need to do a lot check on arguments.
+
+It is the responsibility of `must` to enable these checking in a test env and to
+disable them in production env(for performance concern).
+
 [![Travis-CI](https://api.travis-ci.org/openacid/must.svg?branch=master)](https://travis-ci.org/openacid/must)
 [![GoDoc](https://godoc.org/github.com/openacid/must?status.svg)](http://godoc.org/github.com/openacid/must)
 [![Report card](https://goreportcard.com/badge/github.com/openacid/must)](https://goreportcard.com/report/github.com/openacid/must)
