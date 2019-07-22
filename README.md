@@ -21,6 +21,7 @@ disable them in production env(for performance concern).
  
 
 - [Usage](#usage)
+  - [Efficiency](#efficiency)
 - [API](#api)
 - [Examples](#examples)
 - [Install](#install)
@@ -43,29 +44,28 @@ import (
 	"github.com/openacid/must"
 )
 
-var mustbe = must.Be
-
 func rshift(a, b int) int {
 
 	// "go build" emits a single No-op instruction.
 	// "go build -tags debug" will call the function and to the checking.
-	mustbe.OK(func() {
-		mustbe.NotZero(b)
-		mustbe.True(bits.TrailingZeros(uint(a)) > 2, "a must be multiple of 8")
+	must.Be.OK(func() {
+		must.Be.NotZero(b)
+		must.Be.True(bits.TrailingZeros(uint(a)) > 2,
+			"a must be multiple of 8")
 	})
 
 	return a >> uint(b)
 }
 
 func main() {
-	fmt.Println(rshift(0xf, 1)) // panic at line 19 with "go run -tags debug"
+	// panic at line 19 with "go run -tags debug"
+	fmt.Println(rshift(0xf, 1))
 }
 ```
 
 With the above code:
 
-**Enable check** with `go run -tags debug`.
-
+**Enable check** with `go run -tags debug .`.
 It would panic because `a` does not satisfy the input
 expectation:
 
@@ -76,12 +76,21 @@ panic:
         Messages:       a must be multiple of 8
 ```
 
-To disassemble the binary we could see there is checking statement instruction:
+**Disable check** with `go run .`
+It just silently ignores the expectation and print the result:
+
+```
+7
+```
+
+## Efficiency
+
+**With debug**, there are checking statement instructions generated:
 
 ```
 > go build -tags debug -o bin-debug .
 > go tool objdump -S bin-debug
->
+
 TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
 func rshift(a, b int) int {
   ...
@@ -94,15 +103,7 @@ func rshift(a, b int) int {
   ...
 ```
 
-**Disable check** with `go run .`
-
-It just silently ignores the expectation and print the result:
-
-```
-7
-```
-
-To disassemble the binary we could see there is only a `NOPL` instruction:
+**Without debug**, there is only a `NOPL` instruction:
 
 ```
 > go build -o bin-release .
@@ -123,7 +124,9 @@ TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
 
 `must` uses the popular [testify](https://github.com/stretchr/testify) as underlying
 asserting engine, thus there is a corresponding function defined for every
-`testify` assertion function:
+`testify` assertion function.
+
+And `must.Be.OK(f func())` should be the entry of a set of checks:
 
 ```
 must.Be.OK(f func())
