@@ -14,7 +14,7 @@ disable them in production env(for performance concern).
 [![Report card](https://goreportcard.com/badge/github.com/openacid/must)](https://goreportcard.com/report/github.com/openacid/must)
 [![GolangCI](https://golangci.com/badges/github.com/openacid/must.svg)](https://golangci.com/r/github.com/openacid/must)
 [![Sourcegraph](https://sourcegraph.com/github.com/openacid/must/-/badge.svg)](https://sourcegraph.com/github.com/openacid/must?badge)
-![stability-unstable](https://img.shields.io/badge/stability-unstable-yellow.svg)
+![stability-stable](https://img.shields.io/badge/stability-stable-green.svg)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
