@@ -11,8 +11,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type beTyp struct{}
-
 type tTyp struct {
 	msg []string
 }
@@ -28,16 +26,17 @@ func (t *tTyp) chk(rst bool) {
 	}
 }
 
-var (
-	// Be is the container of all checking APIs, such as "must.Be.Equal(a, b)".
-	//
-	// Since 0.1.0
-	Be = &beTyp{}
-)
+type beTyp func(f func())
 
-func (be *beTyp) OK(f func()) {
+func be(f func()) {
 	f()
 }
+
+// Be calls a checking function.
+// If f() fails Be() would panic.
+//
+// Since 0.1.2
+var Be beTyp = be
 
 // wrappers of testify/assert
 

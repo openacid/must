@@ -48,9 +48,10 @@ func rshift(a, b int) int {
 
 	// "go build" emits a single No-op instruction.
 	// "go build -tags debug" will call the function and to the checking.
-	must.Be.OK(func() {
-		must.Be.NotZero(b)
-		must.Be.True(bits.TrailingZeros(uint(a)) > 2,
+	must.Be(func() {
+		t := must.Be
+		t.NotZero(b)
+		t.True(bits.TrailingZeros(uint(a)) > 2,
 			"a must be multiple of 8")
 	})
 
@@ -126,10 +127,10 @@ TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
 asserting engine, thus there is a corresponding function defined for every
 `testify` assertion function.
 
-And `must.Be.OK(f func())` should be the entry of a set of checks:
+And `must.Be(f func())` should be the entry of a set of checks:
 
 ```
-must.Be.OK(f func())
+must.Be(f func())
 
 must.Be.Condition(comp assert.Comparison, msgAndArgs ...interface{})
 must.Be.Contains(s, contains interface{}, msgAndArgs ...interface{})

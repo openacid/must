@@ -11,9 +11,10 @@ func rshift(a, b int) int {
 
 	// "go build" emits a single No-op instruction.
 	// "go build -tags debug" will call the function and to the checking.
-	must.Be.OK(func() {
-		must.Be.NotZero(b)
-		must.Be.True(bits.TrailingZeros(uint(a)) > 2,
+	must.Be(func() {
+		t := must.Be
+		t.NotZero(b)
+		t.True(bits.TrailingZeros(uint(a)) > 2,
 			"a must be multiple of 8")
 	})
 

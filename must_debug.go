@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	// Be is the container of all checking APIs, such as "must.Be.Equal(a, b)".
+	// Be is the entrance.
 	//
-	// Since 0.1.0
+	// Since 0.1.2
 	Be = enabled.Be
 )
