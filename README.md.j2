@@ -101,10 +101,10 @@ TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
 asserting engine, thus there is a corresponding function defined for every
 `testify` assertion function.
 
-And `must.Be(f func())` should be the entry of a set of checks:
+And `must.Be.OK(f func())` should be the entry of a set of checks:
 
 ```
-must.Be(f func())
+must.Be.OK(f func())
 
 must.Be.Condition(comp assert.Comparison, msgAndArgs ...interface{})
 must.Be.Contains(s, contains interface{}, msgAndArgs ...interface{})

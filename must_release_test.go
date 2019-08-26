@@ -19,14 +19,14 @@ func TestOK(t *testing.T) {
 
 	val := 0
 
-	must.Be(func() {
+	must.Be.OK(func() {
 		val = 1
 	})
 
 	ta.Equal(0, val)
 
 	ta.NotPanics(func() {
-		must.Be(func() {
+		must.Be.OK(func() {
 			must.Be.True(false)
 		})
 	})
