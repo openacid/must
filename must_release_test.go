@@ -5,13 +5,46 @@ package must_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
+	"os/exec"
 	"testing"
 	"time"
 
 	"github.com/openacid/must"
 	"github.com/stretchr/testify/require"
 )
+
+func TestCompiledToNOP(t *testing.T) {
+
+	ta := require.New(t)
+
+	out, err := exec.Command("go", "build",
+		"-o", "github.com/openacid/must.a",
+		"github.com/openacid/must").Output()
+
+	fmt.Println(string(out))
+	ta.NoError(err)
+
+	out, err = exec.Command("go", "tool", "compile",
+		"-I", ".",
+		"must_release_compile_test.go").Output()
+
+	fmt.Println(string(out))
+	ta.NoError(err)
+
+	out, err = exec.Command("go", "tool", "objdump",
+		"-s", "CheckedRShift",
+		"must_release_compile_test.o",
+	).Output()
+
+	fmt.Println(string(out))
+	ta.NoError(err)
+
+	ta.NotRegexp(`must_release_compile_test.go:11.*CheckedRShift.func1`,
+		string(out),
+		"there should NOT be a embedded func called")
+}
 
 func TestOK(t *testing.T) {
 
