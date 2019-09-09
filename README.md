@@ -21,7 +21,9 @@ disable them in production env(for performance concern).
  
 
 - [Usage](#usage)
-  - [Efficiency](#efficiency)
+  - [Performance impact](#performance-impact)
+    - [Debug mode](#debug-mode)
+    - [Release mode](#release-mode)
 - [API](#api)
 - [Examples](#examples)
 - [Install](#install)
@@ -83,9 +85,45 @@ It just silently ignores the expectation and print the result:
 7
 ```
 
-## Efficiency
+## Performance impact
 
-**With debug**, there are checking statement instructions generated:
+- **Without debug**, `must` statement generates only a `NOPL` instruction.
+  Thus the performance impact is unnoticeable.
+
+- **With debug**, there are checking statement instructions generated.
+
+- **BUT, using `must.Be.OK()` creates a closure,
+  which hinders inlining a function**. See [golang-inline-rules](https://github.com/golang/go/wiki/CompilerOptimizations#function-inlining) :
+
+> Function Inlining
+>
+> Only short and simple functions are inlined. To be inlined a function must
+> contain less than ~40 expressions and does not contain complex things like
+> function calls, loops, labels, closures, panic's, recover's, select's,
+> switch'es, etc.
+
+Since inlining function is part of golang compile time optimization for small
+functions,
+there will introduce a minor portion of performance impact if you  have a lot
+calls to small functions.
+
+### Debug mode
+
+```
+> go build -o bin-release .
+> go tool objdump -S bin-release
+
+TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
+        mustbe.OK(func() {
+  0x1246030             90                      NOPL
+  0x1246031             488b4c2410              MOVQ 0x10(SP), CX
+        return a >> uint(b)
+  0x1246036             4883f940                CMPQ $0x40, CX
+  ...
+  0x1246050             c3                      RET
+```
+
+### Release mode
 
 ```
 > go build -tags debug -o bin-debug .
@@ -101,22 +139,6 @@ func rshift(a, b int) int {
         f()
   0x124822d             488b1c24                MOVQ 0(SP), BX
   ...
-```
-
-**Without debug**, there is only a `NOPL` instruction:
-
-```
-> go build -o bin-release .
-> go tool objdump -S bin-release
-
-TEXT main.rshift(SB) github.com/openacid/must/examples/rshift/composite/main.go
-        mustbe.OK(func() {
-  0x1246030             90                      NOPL
-  0x1246031             488b4c2410              MOVQ 0x10(SP), CX
-        return a >> uint(b)
-  0x1246036             4883f940                CMPQ $0x40, CX
-  ...
-  0x1246050             c3                      RET
 ```
 
 
